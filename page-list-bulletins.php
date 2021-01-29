@@ -1,14 +1,8 @@
 <?php
 /**
  * Template Name: List bulletins
- * The main template file
- *
- * This is the most generic template file in a WordPress theme and one
- * of the two required files for a theme (the other being style.css).
- * It is used to display a page when nothing more specific matches a query,
- * e.g., it puts together the home page when no home.php file exists.
- *
- * @link http://codex.wordpress.org/Template_Hierarchy
+ * Page to list bulletin posts and comments
+ * This is the main page for the bbs feature
  *
  * @package WordPress
  * @subpackage FreelanceEngine
