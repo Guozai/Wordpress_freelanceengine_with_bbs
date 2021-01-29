@@ -11,3 +11,10 @@
  * @subpackage FreelanceEngine
  * @since FreelanceEngine 1.8.2
  */
+global $user_ID;
+get_header();
+
+?>
+
+<?php
+get_footer();
