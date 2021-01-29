@@ -34,14 +34,14 @@ function fre_register_bulletin() {
 		'show_ui'           => true,
 		'show_in_menu'      => true,
 		'show_in_admin_bar' => true,
-		'menu_position'     => 6,
+		'menu_position'     => 7,
 		'show_in_nav_menus'   => true,
 		'publicly_queryable'  => true,
 		'exclude_from_search' => false,
-		'has_archive'         => ae_get_option( 'fre_profile_archive', 'profiles' ),
+		'has_archive'         => ae_get_option( 'fre_bulletin_archive', 'bulletins' ),
 		'query_var'           => true,
 		'can_export'          => true,
-		'rewrite'             => true, //array('slug' => ae_get_option('fre_profile_slug', '')),
+		'rewrite'             => array('slug' => ae_get_option('fre_project_slug', 'bulletin')),
 		'capability_type'     => 'post',
 		'supports'            => array(
 			'title',
@@ -57,7 +57,7 @@ function fre_register_bulletin() {
 			'post-formats'
 		)
 	);
-	register_post_type( PROFILE, $args );
+	register_post_type( BULLETIN, $args );
 	$labels = array(
 		'name'                  => _x( 'Countries', 'Taxonomy plural name', ET_DOMAIN ),
 		'singular_name'         => _x( 'Country', 'Taxonomy singular name', ET_DOMAIN ),
