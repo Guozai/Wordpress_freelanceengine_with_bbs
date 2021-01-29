@@ -8,9 +8,77 @@ Template:       freelanceengine
 Version:        1.0
 */
 
+.fre-bulletin-box {
+    border-top: 1px solid #ededed;
+    -webkit-box-shadow: 0px 1px 1px 0px rgba(185, 184, 184, 0.75);
+    -moz-box-shadow: 0px 1px 1px 0px rgba(185, 184, 184, 0.75);
+    box-shadow: 0px 1px 1px 0px rgba(185, 184, 184, 0.75);
+    background: #FFF;
+    padding: 40px 40px 34px
+}
+
+.fre-bulletin-box+.fre-bulletin-box {
+    margin: 22px 0 0
+}
+
+.bulletin-freelance-info-wrap.active .bulletin-freelance-info {
+    display: none
+}
+
+.bulletin-freelance-info-wrap.active .bulletin-freelance-info-edit {
+    display: block
+}
+
+.freelance-bulletin-wrap>h2{
+ 	margin:0;
+ 	font-size:16px;
+ 	font-weight:600;
+ 	color:#2c3e50;
+ 	line-height:1.5em
+}
+.freelance-bulletin-wrap>h3{
+	margin:10px 0 0;
+	font-size:16px;
+	font-weight:600;
+	color:#2c3e50;
+	line-height:1.5em
+}
+.freelance-bulletin-wrap>h4{
+	margin:10px 0 0;
+	font-size:16px;
+	font-weight:400;
+	color:#2c3e50;
+	line-height:1.5em
+}
+.freelance-bulletin-wrap>p{
+	font-size:16px;
+	color:#415161;
+	line-height:1.8em;
+	margin:14px 0 0
+}
+
 @media (max-width:767px) {
     .page-post-bulletin-wrap {
         margin-left: -15px;
         margin-right: -15px
+    }
+	
+    .bulletin-wrap {
+        margin-left: -15px;
+        margin-right: -15px
+    }
+	
+	.fre-bulletin-box {
+        padding: 30px 15px
+    }
+}
+
+@media (max-width:991px) {
+	.fre-bulletin-box {
+        padding: 30px 30px 24px
+    }
+
+    .fre-bulletin-box+.fre-bulletin-box {
+        margin-top: 14px
     }
 }
