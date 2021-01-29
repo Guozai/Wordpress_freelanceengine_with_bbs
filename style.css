@@ -7,3 +7,10 @@ Author URI:     https://www.linkedin.com/in/epping-yiping-guo-8b481345/
 Template:       freelanceengine
 Version:        1.0
 */
+
+@media (max-width:767px) {
+    .page-post-bulletin-wrap {
+        margin-left: -15px;
+        margin-right: -15px
+    }
+}

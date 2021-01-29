@@ -109,3 +109,16 @@ function fre_register_bulletin() {
 }
 
 add_action( 'init', 'fre_register_bulletin', 1 );
+
+/**
+ * enqueue child styles
+ */
+function freelanceengine_child_styles() {
+	wp_dequeue_style( 'main-style' );
+	wp_deregister_style( 'main-style' );
+
+	wp_register_style( 'main-style', get_stylesheet_directory_uri() .'/style.css', array());
+	wp_enqueue_style('main-style' );	
+}
+
+add_action( 'wp_enqueue_styles', 'freelanceengine_child_styles', 100 );
