@@ -57,7 +57,7 @@ $user_role   = ae_user_role( $user_ID );
                                     </div>
                                 </div>
                             </div>
-                            <?php //get_template_part( 'list', 'bulletins' ); ?>
+                            <?php get_template_part( 'list', 'bulletins' ); ?>
                         </div>
                     </div>
                     <?php 
