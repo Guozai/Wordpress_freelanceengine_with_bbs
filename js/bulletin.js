@@ -985,7 +985,6 @@
             this.modalChangePW.openModal();
         },
         showEditTab: function (e) {
-            debugger;
             e.preventDefault();
             var obj = $(e.currentTarget);
             var tab_id = obj.attr('data-ctn_edit');
