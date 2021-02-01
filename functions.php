@@ -2,7 +2,7 @@
 define( 'BULLETIN', 'bulletin' );
 
 /**
- * Corresponding to bulletins.php
+ * Corresponding to start of bulletins.php
  * Registers a new post type Bulletin
  * @uses $wp_post_types Inserts new post type object into the list
  *
@@ -108,7 +108,25 @@ function fre_register_bulletin() {
 	$ae_post_factory->set( BULLETIN, new AE_Posts( BULLETIN, $bulletin_tax, $bulletin_meta ) );
 }
 
-add_action( 'init', 'fre_register_bulletin', 1 );
+add_action( 'init', 'fre_register_bulletin', 25 );
+
+/**
+ * register post type bulletin.
+ */
+function setup_child_theme_classes() {
+	class Fre_BulletinAction extends AE_PostAction {
+
+		
+	}
+
+	new Fre_BulletinAction();
+}
+
+add_action( 'after_setup_theme', 'setup_child_theme_classes');
+
+/**
+ * end of bulletins.php
+ ***********************************************************************************************************/
 
 /**
  * enqueue child styles
