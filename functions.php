@@ -115,8 +115,119 @@ add_action( 'init', 'fre_register_bulletin', 25 );
  */
 function setup_child_theme_classes() {
 	class Fre_BulletinAction extends AE_PostAction {
+		function __construct( $post_type = 'bulletin' ) {
+			$this->post_type = BULLETIN;
+			// add action fetch bulletin
+			//$this->add_ajax( 'ae-featch-bulletins', 'fetch_post' );
+			/**
+			 * sync bulletin
+			 * # update , insert ...
+			 *
+			 * @param Array $request
+			 *
+			 * @since v1.8.2
+			 */
+			$this->add_ajax( 'ae-bulletin-sync', 'sync_post' );
+			//$this->add_action( 'pre_get_posts', 'pre_get_bulletin' );
+			/**
+			 * hook convert a bulletin to add custom meta data
+			 *
+			 * @param Object $result bulletin object
+			 *
+			 * @since v1.8.2
+			 */
+			$this->add_filter( 'ae_convert_bulletin', 'ae_convert_bulletin' );
 
-		
+			// add comment post meta
+
+			// modify comment post meta
+
+			// hook to groupy by, group bulletin by author
+			//$this->add_filter( 'posts_groupby', 'posts_groupby', 10, 2 );
+			// filter post where to check bulletin title
+			//$this->add_filter( 'posts_search', 'fre_posts_search', 10, 2 );
+			// add filter posts join to join post meta and get et professional title
+			//$this->add_filter( 'posts_join', 'fre_join_post', 10, 2 );
+			// add filter groupby, group bulletin by post_category
+			//$this->add_filter( 'posts_groupby', 'fre_posts_group_by', 10, 2 );
+			// Delete bulletin after admin delete user
+			//$this->add_action( 'remove_user_from_blog', 'fre_delete_bulletin_after_delete_user' );
+			// delete comment
+			//$this->add_ajax( 'ae-bulletin-delete-meta', 'deleteMetaBulletin' );
+		}
+
+		/**
+		 * convert bulletin
+		 * @package FreelanceEngine
+		 */
+		function ae_convert_bulletin( $result ) {
+
+			return $result;
+		}
+
+		/**
+	 	 * ajax callback sync post details
+		 * - update
+		 * - insert
+		 * - delete
+		 */
+		function sync_post() {
+			global $ae_post_factory, $user_ID;
+			$request 	= $_REQUEST;
+
+			if ( ! AE_Users::is_activate( $user_ID ) ) {
+				wp_send_json( array(
+					'success' => false,
+					'msg'     => __( "Your account is pending. You have to activate your account to continue this step.", ET_DOMAIN )
+				) );
+			};
+
+			// prevent customers submit posts
+			if ( ! fre_share_role() && ae_user_role() == EMPLOYER ) {
+				wp_send_json( array(
+					'success' => false,
+					'msg'     => __( "You need an lawyer account to submit a bulletin post.", ET_DOMAIN )
+				) );
+			}
+
+			// set status for bulletin
+			if ( isset( $request['archive'] ) ) {
+				$request['post_status'] = 'archive';
+			}
+			if ( isset( $request['publish'] ) ) {
+				$request['post_status'] = 'publish';
+			}
+			if ( isset( $request['delete'] ) ) {
+				$request['post_status'] = 'trash';
+			}
+			if ( isset( $request['disputed'] ) ) {
+				$request['post_status'] = 'disputed';
+			}
+			if ( ! isset( $request['post_status'] ) ) {
+				$request['post_status'] = 'publish';
+			}
+
+			$bulletin = $ae_post_factory->get( $this->post_type );
+			
+			// sync place
+			$result = $bulletin->sync( $request );
+			
+			if ( ! is_wp_error( $result ) ) {
+			
+			}
+				
+		}
+
+		/**
+	 	 * Get post_category
+	 	 */
+		public function fre_get_category() {
+			$terms = get_terms( 'post_category', array(
+				'hide_empty' => 0,
+				'fields'     => 'names'
+			) );
+			wp_send_json( $terms );
+		}
 	}
 
 	new Fre_BulletinAction();
@@ -140,3 +251,20 @@ function freelanceengine_child_styles() {
 }
 
 add_action( 'wp_enqueue_styles', 'freelanceengine_child_styles', 100 );
+
+function freelanceengine_child_scripts() {
+	// script edit bulletin
+	if ( is_page_template( 'page-bulletin.php' ) || is_author() || et_load_mobile() ) {
+		// register child page-bulletin.php script
+		wp_register_script( 'bulletin', get_stylesheet_directory_uri() . '/js/bulletin.js', array( 'jquery',
+			'underscore',
+			'backbone',
+			'appengine',
+			'front' ), ET_VERSION, true );
+
+		// enqueue replacement child theme script
+		wp_enqueue_script( 'bulletin' );
+	}
+}
+
+add_action( 'wp_enqueue_scripts', 'freelanceengine_child_scripts', 100 );
