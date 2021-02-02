@@ -13,13 +13,13 @@
  */
 global $ae_post_factory, $user_ID;
 get_header();
-/*if ( isset($_REQUEST['id']) ) {
+if ( isset($_REQUEST['id']) ) {
     $post = get_post($_REQUEST['id']);
     if ( $post ) {
         $post_object = $ae_post_factory->get($post->post_type);
         $post_convert = $post_object->convert($post);
     }
-}*/
+}
 $is_edit = true;
 ?>
 
