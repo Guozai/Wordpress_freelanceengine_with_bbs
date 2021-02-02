@@ -38,7 +38,6 @@
         },
 
         saveBulletin: function(event) {
-            debugger;
             event.preventDefault();
             event.stopPropagation();
 

@@ -195,142 +195,25 @@ function setup_child_theme_classes() {
 				$request['post_status'] = 'publish';
 			}
 
-			// version 1.8.2 set display name when update profile
-			if ( isset( $request['display_name'] ) and ! empty( $request['display_name'] ) ) {
-				wp_update_user( array( 'ID' => $user_ID, 'display_name' => $request['display_name'] ) );
-			}
-			if ( isset( $request['work_experience'] ) && ! empty( $request['work_experience'] ) && is_array( $request['work_experience'] ) ) {
-				$profile_id = get_user_meta( $user_ID, 'user_profile_id', true );
-				$experience = $request['work_experience'];
-				if ( ! empty( $experience['title'] ) && ! empty( $experience['subtitle'] ) ) {
-					if ( ! empty( $experience['id'] ) ) {
-						$meta_id = $experience['id'];
-						unset( $experience['id'] );
-						global $wpdb;
-						$update = $wpdb->update( $wpdb->postmeta, array( 'meta_value' => serialize( $experience ) ), array( 'meta_id' => $meta_id ) );
-					} else {
-						$update = add_post_meta( $profile_id, 'work_experience', serialize( $experience ) );
-					}
-					if ( $update === false ) {
-						wp_send_json( array(
-							'success' => false,
-							'msg'     => __( "Update Experience fail.", ET_DOMAIN )
-						) );
-					}
+			// version 1.8.2 retrieve bulletin
+			if ( isset( $request['bulletin'] ) and ! empty( $request['bulletin'] ) ) {
+				$bulletin = array(
+					'post_title' => $request['bulletin']['title'],
+					'post_content' => $request['bulletin']['content'],
+					'post_author' => $user_ID,
+					'post_status' => $request['post_status'],
+					//'post_category' => $request['bulletin']->post_category,
+				);
+				if ($request['method'] === 'create') {
+					$status = wp_insert_post($bulletin);
+				}
+				if ($status === false) {
+					wp_send_json( array(
+						'success' => false,
+						'msg'     => __( "Failed to create new post.", ET_DOMAIN )
+					) );
 				}
 			}
-			if ( isset( $request['certification'] ) && ! empty( $request['certification'] ) && is_array( $request['certification'] ) ) {
-				$profile_id    = get_user_meta( $user_ID, 'user_profile_id', true );
-				$certification = $request['certification'];
-				if ( ! empty( $certification['title'] ) && ! empty( $certification['subtitle'] ) ) {
-					if ( ! empty( $certification['id'] ) ) {
-						$meta_id = $certification['id'];
-						unset( $certification['id'] );
-						global $wpdb;
-						$update = $wpdb->update( $wpdb->postmeta, array( 'meta_value' => serialize( $certification ) ), array( 'meta_id' => $meta_id ) );
-					} else {
-						$update = add_post_meta( $profile_id, 'certification', serialize( $certification ) );
-					}
-					if ( $update === false ) {
-						wp_send_json( array(
-							'success' => false,
-							'msg'     => __( "Update Fertification fail.", ET_DOMAIN )
-						) );
-					}
-				}
-			}
-			if ( isset( $request['education'] ) && ! empty( $request['education'] ) && is_array( $request['education'] ) ) {
-				$profile_id = get_user_meta( $user_ID, 'user_profile_id', true );
-				$education  = $request['education'];
-				if ( ! empty( $education['title'] ) && ! empty( $education['subtitle'] ) ) {
-					if ( ! empty( $education['id'] ) ) {
-						$meta_id = $education['id'];
-						unset( $education['id'] );
-						global $wpdb;
-						$update = $wpdb->update( $wpdb->postmeta, array( 'meta_value' => serialize( $education ) ), array( 'meta_id' => $meta_id ) );
-					} else {
-						$update = add_post_meta( $profile_id, 'education', serialize( $education ) );
-					}
-					if ( $update === false ) {
-						wp_send_json( array(
-							'success' => false,
-							'msg'     => __( "Edit Education Fail.", ET_DOMAIN )
-						) );
-					}
-				}
-			}
-			// set profile title
-			$request['post_title'] = ! empty( $request['display_name'] ) ? $request['display_name'] : $user_data->display_name;
-			if ( $request['method'] == 'create' ) {
-				$profile_id = get_user_meta( $user_ID, 'user_profile_id', true );
-				if ( $profile_id ) {
-					$profile_post = get_post( $profile_id );
-					if ( $profile_post && $profile_post->post_status != 'draft' ) {
-						wp_send_json( array(
-								'success' => false,
-								'msg'     => __( "You only can have on profile.", ET_DOMAIN )
-							)
-						);
-					}
-				}
-			}
-			$email_skill = 0;
-			if ( isset( $request['email_skill'] ) ) {
-
-				if ( ! empty( $request['email_skill'] ) ) {
-
-					if ( is_array( $request['email_skill'] ) ) {
-						$email_skill = ! empty( $request['email_skill'][0] ) ? $request['email_skill'][0] : 0;
-					} else {
-						$email_skill = $request['email_skill'];
-					}
-				} else {
-					$email_skill = 0;
-				}
-				$profile_id = get_user_meta( $user_ID, 'user_profile_id', true );
-				update_post_meta( $profile_id, 'email_skill', $email_skill );
-			}
-			do_action('before_sync_profile', $request);
-			// sync profile
-			$result = $profile->sync( $request );
-			if ( ! is_wp_error( $result ) ) {
-				$result->redirect_url = $result->permalink;
-				$rating_score         = get_post_meta( $result->ID, 'rating_score', true );
-				if ( ! $rating_score ) {
-					update_post_meta( $result->ID, 'rating_score', 0 );
-				}
-				$user_available = get_user_meta( $user_ID, 'user_available', true );
-				update_post_meta( $result->ID, 'user_available', $user_available );
-				// action create profile
-				if ( $request['method'] == 'create' ) {
-					//update_post_meta( $result->ID,'hour_rate', 0);//@author: danng  fix query meta in page profiles search in version 1.8.4
-					update_post_meta( $result->ID, 'total_projects_worked', 0 );
-
-					$profile_id = get_user_meta( $user_ID, 'user_profile_id', true ); // 1.8.6.1
-					update_post_meta( $profile_id, 'email_skill', $email_skill );  // 1.8.6.1
-					// store profile id to user meta
-					$response = array(
-						'success' => true,
-						'data'    => $result,
-						'msg'     => __( "Your profile has been created successfully.", ET_DOMAIN )
-					);
-					wp_send_json( $response );
-					//action update profile
-				} else if ( $request['method'] == 'update' ) {
-					$response = array(
-						'success' => true,
-						'data'    => $result,
-						'msg'     => __( "Your profile has been updated successfully.", ET_DOMAIN )
-					);
-					wp_send_json( $response );
-				}
-			} else {
-				wp_send_json( array(
-					'success' => false,
-					'data'    => $result,
-					'msg'     => $result->get_error_message()
-				) );
-			}	
 		}
 
 		/**
