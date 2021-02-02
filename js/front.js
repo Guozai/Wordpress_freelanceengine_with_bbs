@@ -181,7 +181,7 @@
 		 * Model profile
 		 */
 		Models.Profile = Backbone.Model.extend({
-			action: 'ae-profile-sync',
+			action: 'ae-bulletin-sync',
 			initialize: function() {}
 		});
 		/**
@@ -275,10 +275,10 @@
         /**
 		 * Model bulletin
 		 */
-		Models.Bulletin = Backbone.Model.extend({
+		/*Models.Bulletin = Backbone.Model.extend({
 			action: 'ae-bulletin-sync',
 			initialize: function() {}
-		});
+		});*/
 		/**
 		 * Bulletin collection
 		 */
