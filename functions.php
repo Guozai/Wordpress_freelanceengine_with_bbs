@@ -253,14 +253,30 @@ function freelanceengine_child_styles() {
 add_action( 'wp_enqueue_styles', 'freelanceengine_child_styles', 100 );
 
 function freelanceengine_child_scripts() {
+	// Dequeue (remove) parent theme script
+	wp_dequeue_script( 'front' );
+	wp_deregister_script( 'front' );
+
+	wp_register_script( 'front', get_stylesheet_directory_uri() . '/js/front.js', array( 
+		'jquery',
+		'underscore',
+		'backbone',
+		'appengine',
+		'fre-lib' 
+	), ET_VERSION, true );
+
+	// enqueue replacement child theme script
+	wp_enqueue_script( 'front' );
 	// script edit bulletin
 	if ( is_page_template( 'page-bulletin.php' ) || is_author() || et_load_mobile() ) {
 		// register child page-bulletin.php script
-		wp_register_script( 'bulletin', get_stylesheet_directory_uri() . '/js/bulletin.js', array( 'jquery',
+		wp_register_script( 'bulletin', get_stylesheet_directory_uri() . '/js/bulletin.js', array( 
+			'jquery',
 			'underscore',
 			'backbone',
 			'appengine',
-			'front' ), ET_VERSION, true );
+			'front' 
+		), ET_VERSION, true );
 
 		// enqueue replacement child theme script
 		wp_enqueue_script( 'bulletin' );
