@@ -72,6 +72,77 @@ $is_edit = true;
                                                        placeholder="<?php _e( 'Title', ET_DOMAIN ) ?>">
                                             </div>
 
+                                            <div class="fre-input-field">
+                                                <?php
+                                                    $results = $wpdb->get_results( "SELECT term_id FROM " . $wpdb->term_taxonomy . " WHERE taxonomy = 'project_category'" );
+
+                                                    if( !empty($results) ) {
+                                                        $category_arr = array();
+                                                        foreach ($results as $result) {
+                                                            $category = array();
+                                                            $category["name"] = $wpdb->get_var( "SELECT name FROM " . $wpdb->terms . " WHERE term_id = " . $result->term_id);
+                                                            $category["slug"] = $wpdb->get_var( "SELECT slug FROM " . $wpdb->terms . " WHERE term_id = " . $result->term_id);
+                                                            array_push($category_arr, $category);
+                                                        }
+                                                    }
+                                                ?>
+                                                <select data-chosen-width="100%" data-validate_filed="1" data-chosen-disable-search data-placeholder="Choose category" name="bulletin[category]" id="post_category" class='fre-chosen-single' style="display: none;">
+                                                    <?php
+                                                        echo ("<option value=''>Choose post category</option>");
+                                                        $isSelected = false;
+                                                        foreach($category_arr as $category){
+                                                            if ( !empty($category_selected) ) {
+                                                                foreach($category_selected as $selected) {
+                                                                    if ($selected === $category['slug']) {
+                                                                        $isSelected = true;
+                                                                        echo ("<option value='" . $category['slug'] ."' selected>" . $category['name'] . "</option>");
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
+                                                            if ( !$isSelected )
+                                                                echo ("<option value='" . $category['slug'] . "'> " . $category['name'] . "</option>");
+                                                            $isSelected = false;
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+
+                                            <div class="fre-input-field">
+                                                <?php
+                                                    $results = $wpdb->get_results( "SELECT term_id FROM {$wpdb->term_taxonomy} WHERE taxonomy = 'post_language'" );
+
+                                                    $i = 0;
+                                                    if ( !empty($results) ) {
+                                                        foreach ($results as $result) {
+                                                            $language_arr[$i] = $wpdb->get_var( "SELECT name FROM " . $wpdb->terms . " WHERE term_id = " . $result->term_id );
+                                                            $language_slug_arr[$i] = $wpdb->get_var( "SELECT slug FROM " . $wpdb->terms . " WHERE term_id = " . $result->term_id);
+                                                            $i++;
+                                                        }
+                                                    }
+                                                ?>
+                                                <select data-chosen-width="100%" data-validate_filed="1" data-chosen-disable-search data-placeholder="Choose post language" name="bulletin[language]" id="post_language" class='fre-chosen-single' style="display: none;">
+                                                    <?php
+                                                        echo ("<option value=''>Choose Bulletin Post Language</option>");
+                                                        $isSelected = false;
+                                                        foreach($language_arr as $language){
+                                                            if ( !empty($language_selected) ) {
+                                                                foreach($language_selected as $selected) {
+                                                                    if ($selected === strtolower($language)) {
+                                                                        $isSelected = true;
+                                                                        echo ("<option value='" . strtolower($language) ."' selected>$language</option>");
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
+                                                            if ( !$isSelected )
+                                                                echo ("<option value='" . strtolower($language) . "'>$language</option>");
+                                                            $isSelected = false;
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+
                                             <div class="fre-input-field no-margin-bottom">
                                                 <textarea name="bulletin[content]" id="" cols="30" rows="10" placeholder="<?php _e('Starting writing post here',ET_DOMAIN) ?>"></textarea>
                                             </div>

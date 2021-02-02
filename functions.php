@@ -206,6 +206,11 @@ function setup_child_theme_classes() {
 				);
 				if ($request['method'] === 'create') {
 					$status = wp_insert_post($bulletin);
+					$profile_id = get_user_meta( $user_ID, 'user_profile_id', true );
+					$update = add_post_meta( $profile_id, 'post_category', $request['bulletin']['category'] );
+					$status = $status && $update;
+					$update = add_post_meta( $profile_id, 'post_language', $request['bulletin']['language'] );
+					$status = $status && $update;
 				}
 				if ($status === false) {
 					wp_send_json( array(
