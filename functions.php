@@ -161,7 +161,7 @@ function setup_child_theme_classes() {
 		 * @package FreelanceEngine
 		 */
 		function ae_convert_bulletin( $result ) {
-			$myre = $result->tax_input['post_category'];
+
 			return $result;
 		}
 
