@@ -161,7 +161,9 @@ function setup_child_theme_classes() {
 		 * @package FreelanceEngine
 		 */
 		function ae_convert_bulletin( $result ) {
-
+			$result->project_category = get_post_meta( $result->id, 'post_category', true );
+			$result->tax_input['project_category'] = $result->project_category;
+			//$post_language = get_post_meta(  $result->id, 'post_language', true );
 			return $result;
 		}
 
