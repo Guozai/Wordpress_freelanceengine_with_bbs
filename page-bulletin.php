@@ -25,9 +25,9 @@ foreach ( $bulletin_posts as $bulletin_post ) {
         $bulletins[] = $post_object->convert( $bulletin_post );
     }
 }
-if ( !empty($bulletins) ) {
+/*if ( !empty($bulletins) ) {
     $bulletin = $bulletins[0]->post_title;
-}
+}*/
 
 $is_edit = true;
 get_header();
@@ -171,27 +171,26 @@ get_header();
 
 				            <?php if ( ! empty( $bulletins ) ) {
 					            foreach ( $bulletins as $k => $bulletin ) {
-						            if ( ! empty( $bulletin->meta_value ) && is_serialized( $bulletin->meta_value ) ) {
-							            $e_value = unserialize( $bulletin->meta_value );
-							            if ( ! empty( $e_value ) ) {
+						            if ( ! empty( $bulletin ) ) {
+                                        //$post_language = get_post_meta( $bulletin->id, 'post_language', true );
 								        ?>
 
                                             <!-- Box show bulletin posts-->
-                                            <li class="cnt-bulletin-hide meta_history_item_<?php echo $bulletin->meta_id ?>"
-                                                id="cnt-bulletin-default-<?php echo $bulletin->meta_id ?>"
+                                            <li class="cnt-bulletin-hide meta_history_item_<?php echo $bulletin->id ?>"
+                                                id="cnt-bulletin-default-<?php echo $bulletin->id ?>"
                                                 style="<?php echo $k + 1 == count( $bulletins ) ? 'border-bottom: 0;padding-bottom: 0;' : '' ?>">
                                                 <div class="freelance-bulletin-wrap">
-                                    	            <h2><?php echo $e_value['title'] ?></h2>
-                                                    <?php echo apply_filters( 'the_content', $e_value['content'] ) ?>
+                                    	            <h2><?php echo $bulletin->post_title ?></h2>
+                                                    <?php echo apply_filters( 'the_content', $bulletin->post_content ) ?>
                                                 </div>
 									            <?php if ( $is_edit ) { ?>
                                                     <div class="freelance-bulletin-action">
                                                         <a href="javascript:void(0)" class="bulletin-show-edit-tab-btn"
-                                                           data-ctn_edit="ctn-edit-bulletin-<?php echo $bulletin->meta_id ?>">
+                                                           data-ctn_edit="ctn-edit-bulletin-<?php echo $bulletin->id ?>">
                                                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
 												            <?php _e( 'Edit', ET_DOMAIN ) ?>
                                                         </a>
-                                                        <a href="javascript:void(0)" class="remove_history_fre" data-id="<?php echo $bulletin->meta_id ?>">
+                                                        <a href="javascript:void(0)" class="remove_history_fre" data-id="<?php echo $bulletin->id ?>">
                                                             <i class="fa fa-trash-o" aria-hidden="true"></i><?php _e('Remove',ET_DOMAIN) ?></a>
                                                     </div>
 								            	<?php } ?>
@@ -200,8 +199,8 @@ get_header();
 
 								            <?php if ( $is_edit ) { ?>
                                                 <!-- Box edit bulletin post-->
-                                                <li class="freelance-bulletin-new-wrap cnt-bulletin-hide meta_history_item_<?php echo $bulletin->meta_id ?>"
-                                                    id="ctn-edit-bulletin-<?php echo $bulletin->meta_id ?>">
+                                                <li class="freelance-bulletin-new-wrap cnt-bulletin-hide meta_history_item_<?php echo $bulletin->id ?>"
+                                                    id="ctn-edit-bulletin-<?php echo $bulletin->id ?>">
                                                     <div class="freelance-bulletin-new">
                                                         <form class="fre-bulletin-form freelance-bulletin-form "
                                                               method="post">
@@ -209,29 +208,28 @@ get_header();
                                                             <div class="fre-input-field">
                                                                 <input type="text" name="bulletin[title]"
                                                                        placeholder="<?php _e( 'Title', ET_DOMAIN ) ?>"
-                                                                       value="<?php echo $e_value['title'] ?>">
+                                                                       value="<?php echo $bulletin->post_title ?>">
                                                             </div>
 
                                                             <div class="fre-input-field no-margin-bottom">
                                                                 <textarea name="bulletin[content]" id="" cols="30"  placeholder="<?php _e('Start writing post here',ET_DOMAIN) ?>"
-                                                                  rows="10"><?php echo ! empty( $e_value['content'] ) ? $e_value['content'] : '' ?></textarea>
+                                                                  rows="10"><?php echo ! empty( $bulletin->post_content ) ? $bulletin->post_content : '' ?></textarea>
                                                             </div>
 
-                                                            <input type="hidden" value="<?php echo $bulletin->meta_id ?>"
+                                                            <input type="hidden" value="<?php echo $bulletin->id ?>"
                                                                    name="bulletin[id]">
 
                                                             <div class="fre-form-btn">
                                                                 <input type="submit" class="fre-normal-btn btn-submit" name=""
                                                                        value="<?php _e( 'Save', ET_DOMAIN ) ?>">
                                                                 <span class="fre-bulletin-close bulletin-show-edit-tab-btn"
-                                                                      data-ctn_edit="cnt-bulletin-default-<?php echo $bulletin->meta_id ?>"><?php _e( 'Cancel', ET_DOMAIN ) ?></span>
+                                                                      data-ctn_edit="cnt-bulletin-default-<?php echo $bulletin->id ?>"><?php _e( 'Cancel', ET_DOMAIN ) ?></span>
                                                             </div>
                                                         </form>
                                                     </div>
                                                 </li>
                                                 <!-- Box edit bulletin post-->
 								            <?php } 
-							            }
 						            }
 					            }
 				            } ?>
