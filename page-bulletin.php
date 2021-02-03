@@ -12,15 +12,20 @@
  * @since FreelanceEngine 1.8.2
  */
 global $ae_post_factory, $user_ID;
-get_header();
-if ( isset($_REQUEST['id']) ) {
-    $post = get_post($_REQUEST['id']);
-    if ( $post ) {
-        $post_object = $ae_post_factory->get($post->post_type);
-        $post_convert = $post_object->convert($post);
+// convert current bulletin
+$post_object = $ae_post_factory->get( BULLETIN );
+
+$bulletin_posts = get_posts( array(
+    'author' => $user_ID
+) );
+foreach ( $bulletin_posts as $bulletin_post ) {
+    if ( $bulletin_post && !is_wp_error( $bulletin_post ) ) {
+        $bulletin = $post_object->convert( $bulletin_post );
     }
 }
+
 $is_edit = true;
+get_header();
 ?>
 
 <div class="fre-page-wrapper">
