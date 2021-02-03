@@ -163,7 +163,9 @@ function setup_child_theme_classes() {
 		function ae_convert_bulletin( $result ) {
 			$result->project_category = get_post_meta( $result->id, 'post_category', true );
 			$result->tax_input['project_category'] = $result->project_category;
-			//$post_language = get_post_meta(  $result->id, 'post_language', true );
+			$ii = $result;
+			echo "";
+			/*$post_language = get_post_meta(  $result->id, 'post_language', true );*/
 			return $result;
 		}
 
@@ -204,10 +206,10 @@ function setup_child_theme_classes() {
 					'post_content' 	=> $request['bulletin']['content'],
 					'post_author' 	=> $user_ID,
 					'post_status' 	=> $request['post_status'],
-					//'post_type'		=> 'bulletin',
+					'post_type'		=> BULLETIN,
 				);
 				if ($request['method'] === 'create') {
-					$bulletin_id = wp_insert_post($bulletin);
+					$bulletin_id = wp_insert_post( $bulletin, true );
 				} else if ($request['method'] === 'update') {
 
 				} 

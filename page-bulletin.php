@@ -16,7 +16,8 @@ global $ae_post_factory, $user_ID;
 $post_object = $ae_post_factory->get( BULLETIN );
 
 $bulletin_posts = get_posts( array(
-    'author' => $user_ID
+    'author'      => $user_ID,
+    'post_type'   => 'bulletin'
 ) );
 $bulletins = array();
 foreach ( $bulletin_posts as $bulletin_post ) {
