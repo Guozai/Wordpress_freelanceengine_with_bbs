@@ -18,10 +18,14 @@ $post_object = $ae_post_factory->get( BULLETIN );
 $bulletin_posts = get_posts( array(
     'author' => $user_ID
 ) );
+$bulletins = array();
 foreach ( $bulletin_posts as $bulletin_post ) {
     if ( $bulletin_post && !is_wp_error( $bulletin_post ) ) {
-        $bulletin = $post_object->convert( $bulletin_post );
+        $bulletins[] = $post_object->convert( $bulletin_post );
     }
+}
+if ( !empty($bulletins) ) {
+    $bulletin = $bulletins[0]->post_title;
 }
 
 $is_edit = true;

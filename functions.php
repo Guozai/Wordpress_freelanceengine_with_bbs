@@ -118,7 +118,7 @@ function setup_child_theme_classes() {
 		function __construct( $post_type = 'bulletin' ) {
 			$this->post_type = BULLETIN;
 			// add action fetch bulletin
-			//$this->add_ajax( 'ae-featch-bulletins', 'fetch_post' );
+			//$this->add_ajax( 'ae-fetch-bulletins', 'fetch_post' );
 			/**
 			 * sync bulletin
 			 * # update , insert ...
@@ -161,7 +161,7 @@ function setup_child_theme_classes() {
 		 * @package FreelanceEngine
 		 */
 		function ae_convert_bulletin( $result ) {
-
+			$myre = $result->tax_input['post_category'];
 			return $result;
 		}
 
@@ -198,22 +198,21 @@ function setup_child_theme_classes() {
 			// version 1.8.2 retrieve bulletin
 			if ( isset( $request['bulletin'] ) and ! empty( $request['bulletin'] ) ) {
 				$bulletin = array(
-					'post_title' => $request['bulletin']['title'],
-					'post_content' => $request['bulletin']['content'],
-					'post_author' => $user_ID,
-					'post_status' => $request['post_status'],
+					'post_title' 	=> $request['bulletin']['title'],
+					'post_content' 	=> $request['bulletin']['content'],
+					'post_author' 	=> $user_ID,
+					'post_status' 	=> $request['post_status'],
+					//'post_type'		=> 'bulletin',
 				);
 				if ($request['method'] === 'create') {
-					$status = wp_insert_post($bulletin);
-					$profile_id = get_user_meta( $user_ID, 'user_profile_id', true );
-					$update = add_post_meta( $profile_id, 'post_category', $request['bulletin']['category'] );
-					$status = $status && $update;
-					$update = add_post_meta( $profile_id, 'post_language', $request['bulletin']['language'] );
-					$status = $status && $update;
+					$bulletin_id = wp_insert_post($bulletin);
 				} else if ($request['method'] === 'update') {
 
-				}
-				if ($status === false) {
+				} 
+				if ( $bulletin_id !== false ) {
+					add_post_meta( $bulletin_id, 'post_category', $request['bulletin']['category'] );
+					add_post_meta( $bulletin_id, 'post_language', $request['bulletin']['language'] );
+				} else {
 					wp_send_json( array(
 						'success' => false,
 						'msg'     => __( "Failed to create new post.", ET_DOMAIN )
@@ -241,6 +240,24 @@ add_action( 'after_setup_theme', 'setup_child_theme_classes');
 
 /**
  * end of bulletins.php
+ ***********************************************************************************************************/
+
+/***********************************************************************************************************
+ * start of child theme profiles.php
+ * Override basic theme post type profile
+ * Add post meta post_language
+ * 
+ * @uses $wp_post_types Inserts new post type object into the list
+ *
+ * @param string  Post type key, must not exceed 20 characters
+ * @param array|string See optional args description above.
+ *
+ * @return object|WP_Error the registered post type object, or an error object
+ ***********************************************************************************************************/
+
+
+/**
+ * end of profiles.php
  ***********************************************************************************************************/
 
 /**
