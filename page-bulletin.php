@@ -236,14 +236,12 @@ get_header();
                                                                 <select data-chosen-width="100%" data-validate_filed="1" data-chosen-disable-search data-placeholder="Choose category" name="bulletin[category]" id="post_category" class='fre-chosen-single' style="display: none;">
                                                                     <?php
                                                                         echo ("<option value=''>Choose post category</option>");
-                
                                                                         foreach($category_arr as $category){
-                                                                            if ( !empty($bulletin->post_category) && ($bulletin->post_category === $category['slug']) )
+                                                                            if ( !empty($bulletin->project_category) && ($bulletin->project_category === $category['slug']))
                                                                                 echo ("<option value='" . $category['slug'] ."' selected>" . $category['name'] . "</option>");
                                                                             else
                                                                                 echo ("<option value='" . $category['slug'] . "'> " . $category['name'] . "</option>");
                                                                         }
-
                                                                     ?>
                                                                 </select>
                                                             </div>
