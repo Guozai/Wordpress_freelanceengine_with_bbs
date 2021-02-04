@@ -211,7 +211,7 @@ function setup_child_theme_classes() {
 				if ($request['method'] === 'create') {
 					$bulletin_id = wp_insert_post( $bulletin, true );
 				} else if ($request['method'] === 'update') {
-
+					//wp_update_post( $bulletin );
 				} 
 				if ( $bulletin_id !== false ) {
 					add_post_meta( $bulletin_id, 'post_category', $request['bulletin']['category'] );

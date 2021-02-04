@@ -75,7 +75,7 @@ get_header();
                                 <!-- Box add new bulletin post-->
                                 <li class="freelance-bulletin-new-wrap cnt-bulletin-hide" id="ctn-edit-bulletin">
                                     <div class="freelance-bulletin-new">
-                                        <form class="fre-bulletin-form freelance-bulletin-form" method="post">
+                                        <form class="fre-bulletin-form freelance-bulletin-form freelance-bulletin-form-save" method="post">
 
                             	            <div class="fre-input-field">
                                                 <input type="text" name="bulletin[title]"
@@ -136,7 +136,7 @@ get_header();
                                                         echo ("<option value=''>Choose Bulletin Post Language</option>");
                                                         $isSelected = false;
                                                         foreach($language_arr as $language){
-                                                            if ( !empty($language_selected) ) {
+                                                            if ( !empty($post_language) ) {
                                                                 foreach($language_selected as $selected) {
                                                                     if ($selected === strtolower($language)) {
                                                                         $isSelected = true;
@@ -172,7 +172,7 @@ get_header();
 				            <?php if ( ! empty( $bulletins ) ) {
 					            foreach ( $bulletins as $k => $bulletin ) {
 						            if ( ! empty( $bulletin ) ) {
-                                        //$post_language = get_post_meta( $bulletin->id, 'post_language', true );
+                                        $post_language = get_post_meta( $bulletin->id, 'post_language', true );
 								        ?>
 
                                             <!-- Box show bulletin posts-->
@@ -181,6 +181,14 @@ get_header();
                                                 style="<?php echo $k + 1 == count( $bulletins ) ? 'border-bottom: 0;padding-bottom: 0;' : '' ?>">
                                                 <div class="freelance-bulletin-wrap">
                                     	            <h2><?php echo $bulletin->post_title ?></h2>
+                                                    <div class="freelance-bulletin-attributes">
+                                                        <span class="freelance-empty-info">
+                                                            <?php echo !empty( $bulletin->project_category ) ? $bulletin->project_category : '<i>' . __( 'No category information', ET_DOMAIN ) . '</i>'; ?>
+                                                        </span>
+                                                        <span class="freelance-empty-info">
+                                                            <?php echo !empty( $post_language ) ? $post_language : '<i>' . __( 'No language information', ET_DOMAIN ) . '</i>'; ?>
+                                                        </span>
+                                                    </div>
                                                     <?php echo apply_filters( 'the_content', $bulletin->post_content ) ?>
                                                 </div>
 									            <?php if ( $is_edit ) { ?>
@@ -202,7 +210,7 @@ get_header();
                                                 <li class="freelance-bulletin-new-wrap cnt-bulletin-hide meta_history_item_<?php echo $bulletin->id ?>"
                                                     id="ctn-edit-bulletin-<?php echo $bulletin->id ?>">
                                                     <div class="freelance-bulletin-new">
-                                                        <form class="fre-bulletin-form freelance-bulletin-form "
+                                                        <form class="fre-bulletin-form freelance-bulletin-form freelance-bulletin-form-edit"
                                                               method="post">
 
                                                             <div class="fre-input-field">
@@ -211,13 +219,67 @@ get_header();
                                                                        value="<?php echo $bulletin->post_title ?>">
                                                             </div>
 
+                                                            <div class="fre-input-field">
+                                                                <?php
+                                                                    $results = $wpdb->get_results( "SELECT term_id FROM " . $wpdb->term_taxonomy . " WHERE taxonomy = 'project_category'" );
+
+                                                                    if( !empty($results) ) {
+                                                                        $category_arr = array();
+                                                                        foreach ($results as $result) {
+                                                                            $category = array();
+                                                                            $category["name"] = $wpdb->get_var( "SELECT name FROM " . $wpdb->terms . " WHERE term_id = " . $result->term_id);
+                                                                            $category["slug"] = $wpdb->get_var( "SELECT slug FROM " . $wpdb->terms . " WHERE term_id = " . $result->term_id);
+                                                                            array_push($category_arr, $category);
+                                                                        }
+                                                                    }
+                                                                ?>
+                                                                <select data-chosen-width="100%" data-validate_filed="1" data-chosen-disable-search data-placeholder="Choose category" name="bulletin[category]" id="post_category" class='fre-chosen-single' style="display: none;">
+                                                                    <?php
+                                                                        echo ("<option value=''>Choose post category</option>");
+                
+                                                                        foreach($category_arr as $category){
+                                                                            if ( !empty($bulletin->post_category) && ($bulletin->post_category === $category['slug']) )
+                                                                                echo ("<option value='" . $category['slug'] ."' selected>" . $category['name'] . "</option>");
+                                                                            else
+                                                                                echo ("<option value='" . $category['slug'] . "'> " . $category['name'] . "</option>");
+                                                                        }
+
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="fre-input-field">
+                                                                <?php
+                                                                    $results = $wpdb->get_results( "SELECT term_id FROM {$wpdb->term_taxonomy} WHERE taxonomy = 'post_language'" );
+
+                                                                    $i = 0;
+                                                                    if ( !empty($results) ) {
+                                                                        foreach ($results as $result) {
+                                                                            $language_arr[$i] = $wpdb->get_var( "SELECT name FROM " . $wpdb->terms . " WHERE term_id = " . $result->term_id );
+                                                                            $language_slug_arr[$i] = $wpdb->get_var( "SELECT slug FROM " . $wpdb->terms . " WHERE term_id = " . $result->term_id);
+                                                                            $i++;
+                                                                        }
+                                                                    }
+                                                                ?>
+                                                                <select data-chosen-width="100%" data-validate_filed="1" data-chosen-disable-search data-placeholder="Choose post language" name="bulletin[language]" id="post_language" class='fre-chosen-single' style="display: none;">
+                                                                    <?php
+                                                                        echo ("<option value=''>Choose Bulletin Post Language</option>");
+                                                                        $i = 0;
+                                                                        foreach($language_arr as $language){
+                                                                            if ( !empty($post_language) && ($post_language === strtolower($language)) )
+                                                                                echo ("<option value='" . $language_slug_arr[$i] ."' selected>$language</option>");
+                                                                            else
+                                                                                echo ("<option value='" . $language_slug_arr[$i] . "'>$language</option>");
+                                                                            $i++;
+                                                                        }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+
                                                             <div class="fre-input-field no-margin-bottom">
                                                                 <textarea name="bulletin[content]" id="" cols="30"  placeholder="<?php _e('Start writing post here',ET_DOMAIN) ?>"
                                                                   rows="10"><?php echo ! empty( $bulletin->post_content ) ? $bulletin->post_content : '' ?></textarea>
                                                             </div>
-
-                                                            <input type="hidden" value="<?php echo $bulletin->id ?>"
-                                                                   name="bulletin[id]">
 
                                                             <div class="fre-form-btn">
                                                                 <input type="submit" class="fre-normal-btn btn-submit" name=""
