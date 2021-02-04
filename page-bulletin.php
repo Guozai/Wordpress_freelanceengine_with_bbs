@@ -99,20 +99,8 @@ get_header();
                                                 <select data-chosen-width="100%" data-validate_filed="1" data-chosen-disable-search data-placeholder="Choose category" name="bulletin[category]" id="post_category" class='fre-chosen-single' style="display: none;">
                                                     <?php
                                                         echo ("<option value=''>Choose post category</option>");
-                                                        $isSelected = false;
                                                         foreach($category_arr as $category){
-                                                            if ( !empty($category_selected) ) {
-                                                                foreach($category_selected as $selected) {
-                                                                    if ($selected === $category['slug']) {
-                                                                        $isSelected = true;
-                                                                        echo ("<option value='" . $category['slug'] ."' selected>" . $category['name'] . "</option>");
-                                                                        break;
-                                                                    }
-                                                                }
-                                                            }
-                                                            if ( !$isSelected )
-                                                                echo ("<option value='" . $category['slug'] . "'> " . $category['name'] . "</option>");
-                                                            $isSelected = false;
+                                                            echo ("<option value='" . $category['slug'] . "'> " . $category['name'] . "</option>");
                                                         }
                                                     ?>
                                                 </select>
@@ -134,20 +122,13 @@ get_header();
                                                 <select data-chosen-width="100%" data-validate_filed="1" data-chosen-disable-search data-placeholder="Choose post language" name="bulletin[language]" id="post_language" class='fre-chosen-single' style="display: none;">
                                                     <?php
                                                         echo ("<option value=''>Choose Bulletin Post Language</option>");
-                                                        $isSelected = false;
+                                                        $i = 0;
                                                         foreach($language_arr as $language){
-                                                            if ( !empty($post_language) ) {
-                                                                foreach($language_selected as $selected) {
-                                                                    if ($selected === strtolower($language)) {
-                                                                        $isSelected = true;
-                                                                        echo ("<option value='" . strtolower($language) ."' selected>$language</option>");
-                                                                        break;
-                                                                    }
-                                                                }
-                                                            }
-                                                            if ( !$isSelected )
-                                                                echo ("<option value='" . strtolower($language) . "'>$language</option>");
-                                                            $isSelected = false;
+                                                            if ( !empty($post_language) && ($post_language === strtolower($language)) )
+                                                                echo ("<option value='" . $language_slug_arr[$i] ."' selected>$language</option>");
+                                                            else
+                                                                echo ("<option value='" . $language_slug_arr[$i] . "'>$language</option>");
+                                                            $i++;
                                                         }
                                                     ?>
                                                 </select>
