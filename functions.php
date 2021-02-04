@@ -309,3 +309,10 @@ function freelanceengine_child_scripts() {
 }
 
 add_action( 'wp_enqueue_scripts', 'freelanceengine_child_scripts', 100 );
+
+// Remove p tags from category description
+function fre_remove_content_tag($content) {
+	return strip_tags($content, "");
+}
+
+add_filter('the_content', 'fre_remove_content_tag', 100 );
