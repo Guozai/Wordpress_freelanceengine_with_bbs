@@ -228,7 +228,6 @@
             form.find('input[type=radio]:checked').each(function() {
                 view.profile.set($(this).attr('name'), $(this).val());
             });
-            debugger;
             // check form validate and process sign-in
             if (this.bulletin_validator.form() && !form.hasClass("processing")) {
                 //this.profile.set('method', 'update');

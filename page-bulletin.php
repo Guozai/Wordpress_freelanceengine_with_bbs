@@ -108,14 +108,14 @@ get_header();
 
                                             <div class="fre-input-field">
                                                 <?php
+                                                    // get the term_ids of all post_languages
                                                     $results = $wpdb->get_results( "SELECT term_id FROM {$wpdb->term_taxonomy} WHERE taxonomy = 'post_language'" );
-
-                                                    $i = 0;
+                                                    // get the language slug array pair
+                                                    $language_arr = array();
                                                     if ( !empty($results) ) {
                                                         foreach ($results as $result) {
-                                                            $language_arr[$i] = $wpdb->get_var( "SELECT name FROM " . $wpdb->terms . " WHERE term_id = " . $result->term_id );
-                                                            $language_slug_arr[$i] = $wpdb->get_var( "SELECT slug FROM " . $wpdb->terms . " WHERE term_id = " . $result->term_id);
-                                                            $i++;
+                                                            $language_arr[] = $wpdb->get_var( "SELECT name FROM " . $wpdb->terms . " WHERE term_id = " . $result->term_id );
+                                                            //$language_slug_arr[$i] = $wpdb->get_var( "SELECT slug FROM " . $wpdb->terms . " WHERE term_id = " . $result->term_id);
                                                         }
                                                     }
                                                 ?>
@@ -123,7 +123,7 @@ get_header();
                                                     <?php
                                                         echo ("<option value=''>Choose Bulletin Post Language</option>");
                                                         foreach($language_arr as $language){
-                                                            echo ("<option value='" . $language_slug_arr[$i] . "'>$language</option>");
+                                                            echo ("<option value='" . $language . "'>$language</option>");
                                                         }
                                                     ?>
                                                 </select>
@@ -224,27 +224,25 @@ get_header();
 
                                                             <div class="fre-input-field">
                                                                 <?php
+                                                                    // get the term_ids of all post_languages
                                                                     $results = $wpdb->get_results( "SELECT term_id FROM {$wpdb->term_taxonomy} WHERE taxonomy = 'post_language'" );
-
-                                                                    $i = 0;
+                                                                    // get the language slug array pair
+                                                                    $language_arr = array();
                                                                     if ( !empty($results) ) {
                                                                         foreach ($results as $result) {
-                                                                            $language_arr[$i] = $wpdb->get_var( "SELECT name FROM " . $wpdb->terms . " WHERE term_id = " . $result->term_id );
-                                                                            $language_slug_arr[$i] = $wpdb->get_var( "SELECT slug FROM " . $wpdb->terms . " WHERE term_id = " . $result->term_id);
-                                                                            $i++;
+                                                                            $language_arr[] = $wpdb->get_var( "SELECT name FROM " . $wpdb->terms . " WHERE term_id = " . $result->term_id );
+                                                                            //$language_slug_arr[$i] = $wpdb->get_var( "SELECT slug FROM " . $wpdb->terms . " WHERE term_id = " . $result->term_id);
                                                                         }
                                                                     }
                                                                 ?>
                                                                 <select data-chosen-width="100%" data-validate_filed="1" data-chosen-disable-search data-placeholder="Choose post language" name="bulletin[language]" id="post_language" class='fre-chosen-single' style="display: none;">
                                                                     <?php
                                                                         echo ("<option value=''>Choose Bulletin Post Language</option>");
-                                                                        $i = 0;
                                                                         foreach($language_arr as $language){
-                                                                            if ( !empty($post_language) && ($post_language === $language_slug_arr[$i]) )
-                                                                                echo ("<option value='" . $language_slug_arr[$i] ."' selected>$language</option>");
+                                                                            if ( !empty($post_language) && ($post_language === $language) )
+                                                                                echo ("<option value='" . $language ."' selected>$language</option>");
                                                                             else
-                                                                                echo ("<option value='" . $language_slug_arr[$i] . "'>$language</option>");
-                                                                            $i++;
+                                                                                echo ("<option value='" . $language . "'>$language</option>");
                                                                         }
                                                                     ?>
                                                                 </select>
