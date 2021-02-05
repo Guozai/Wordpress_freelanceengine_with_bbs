@@ -12,7 +12,7 @@
             // edit bulletin
             'submit form.freelance-bulletin-form-edit' : 'editBulletin',
             // remove bulletin post
-            'click a.remove_history_fre': 'openModalRemoveHistoryFre',
+            'click a.remove_history_fre': 'RemoveBulletin',
             // show and hide box edit profile
             'click .bulletin-show-edit-tab-btn' : 'showEditTab',
         },
@@ -153,9 +153,10 @@
         editBulletin: function(event) {
             event.preventDefault();
             event.stopPropagation();
-
+            
             var form = $(event.currentTarget),
                 button = form.find('.btn-submit'),
+                id = button .attr('data-id'),
                 view = this,
                 temp = new Array();
 
@@ -230,8 +231,7 @@
             });
             // check form validate and process sign-in
             if (this.bulletin_validator.form() && !form.hasClass("processing")) {
-                //this.profile.set('method', 'update');
-                this.profile.save('', '', {
+                this.profile.save('ID', id, {
                     beforeSend: function() {
                         view.blockUi.block(button);
                         form.addClass('processing');
@@ -260,7 +260,7 @@
             }
         },
 
-        openModalRemoveHistoryFre: function(event) {
+        RemoveBulletin: function(event) {
             event.preventDefault();
             var id = $(event.currentTarget) .attr('data-id');
             var last = $(event.currentTarget) .closest('ul').find('li').length;

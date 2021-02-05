@@ -254,7 +254,7 @@ get_header();
                                                             </div>
 
                                                             <div class="fre-form-btn">
-                                                                <input type="submit" class="fre-normal-btn btn-submit" name=""
+                                                                <input type="submit" class="fre-normal-btn btn-submit" name="" data-id="<?php echo $bulletin->id ?>"
                                                                        value="<?php _e( 'Save', ET_DOMAIN ) ?>">
                                                                 <span class="fre-bulletin-close bulletin-show-edit-tab-btn"
                                                                       data-ctn_edit="cnt-bulletin-default-<?php echo $bulletin->id ?>"><?php _e( 'Cancel', ET_DOMAIN ) ?></span>

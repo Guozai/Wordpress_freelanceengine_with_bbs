@@ -201,29 +201,43 @@ function setup_child_bulletin_class() {
 
 			// version 1.8.2 retrieve bulletin
 			if ( isset( $request['bulletin'] ) and ! empty( $request['bulletin'] ) ) {
-				$bulletin = array(
-					'post_title' 	=> $request['bulletin']['title'],
-					'post_content' 	=> $request['bulletin']['content'],
-					'post_author' 	=> $user_ID,
-					'post_status' 	=> $request['post_status'],
-					'post_type'		=> BULLETIN,
-				);
-				if ($request['method'] === 'create') {
+				// update bulletin post
+				if ( !empty( $request['ID'] ) ) {
+					$bulletin_id = $request['ID'];
+					$bulletin = array(
+						'ID' 			=> $bulletin_id,
+						'post_title' 	=> $request['bulletin']['title'],
+						'post_content' 	=> $request['bulletin']['content'],
+						'post_author' 	=> $user_ID,
+						'post_status' 	=> $request['post_status'],
+						'post_type'		=> BULLETIN,
+					);
+					$result = wp_update_post( $bulletin, true );
+				}
+				// create new bulletin post
+				else {
+					$bulletin = array(
+						'post_title' 	=> $request['bulletin']['title'],
+						'post_content' 	=> $request['bulletin']['content'],
+						'post_author' 	=> $user_ID,
+						'post_status' 	=> $request['post_status'],
+						'post_type'		=> BULLETIN,
+					);
 					$bulletin_id = wp_insert_post( $bulletin, true );
-				} else if ($request['method'] === 'update') {
-					//wp_update_post( $bulletin );
 				} 
 				if ( $bulletin_id !== false ) {
 					add_post_meta( $bulletin_id, 'post_category', $request['bulletin']['category'] );
 					add_post_meta( $bulletin_id, 'post_language', $request['bulletin']['language'] );
-					wp_send_json( array(
-						'success' => true,
-						'msg'     => __( "Your post has been created successfully.", ET_DOMAIN )
-					) );
-				} else {
+				}
+				if( is_wp_error($result) || $bulletin_id == false ) {	
 					wp_send_json( array(
 						'success' => false,
 						'msg'     => __( "Failed to create new post.", ET_DOMAIN )
+					) );
+				} else {
+					wp_send_json( array(
+						'success' => true,
+						'msg'     => __( "Your post has been created successfully.", ET_DOMAIN )
 					) );
 				}
 			}
