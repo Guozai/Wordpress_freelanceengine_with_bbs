@@ -266,8 +266,6 @@
             var last = $(event.currentTarget) .closest('ul').find('li').length;
             var obj = $(event.currentTarget);
             var view = this;
-            //var id = $('input[name="ID"]',obj).val();
-            //var last = obj.attr('data-last');
             obj.attr('data-processing','yes');
             $.ajax({
                 type: "post",
@@ -298,7 +296,6 @@
                             notice_type: 'error'
                         });
                     }
-                    //view.closeModal();
                     obj.attr('disabled', false).css('opacity', '1');
                     view.blockUi.unblock();
                 }
