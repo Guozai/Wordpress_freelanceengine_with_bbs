@@ -8,7 +8,7 @@
         el: '.list-bulletin-wrapper',
         events: {
             // save bulletin
-            'submit form.freelance-bulletin-form-save' : 'saveBulletin',
+            'submit form.freelance-bulletin-form-save' : 'editBulletin',
             // edit bulletin
             'submit form.freelance-bulletin-form-edit' : 'editBulletin',
             // remove bulletin post
@@ -228,10 +228,11 @@
             form.find('input[type=radio]:checked').each(function() {
                 view.profile.set($(this).attr('name'), $(this).val());
             });
+            debugger;
             // check form validate and process sign-in
             if (this.bulletin_validator.form() && !form.hasClass("processing")) {
-                this.user.set('do', 'profile');
-                this.user.request('update', {
+                //this.profile.set('method', 'update');
+                this.profile.save('', '', {
                     beforeSend: function() {
                         view.blockUi.block(button);
                         form.addClass('processing');
@@ -240,14 +241,15 @@
                         view.blockUi.unblock();
                         form.removeClass('processing');
                         // trigger event process authentication
-                        AE.pubsub.trigger('ae:user:profile', profile, status, jqXHR);
+                        AE.pubsub.trigger('ae:user:profile:update', profile, status, jqXHR);
+
                         // trigger event notification
                         if (status.success) {
                             AE.pubsub.trigger('ae:notification', {
                                 msg: status.msg,
                                 notice_type: 'success',
                             });
-                            window.location.href = "";
+                            location.reload();
                         } else {
                             AE.pubsub.trigger('ae:notification', {
                                 msg: status.msg,
