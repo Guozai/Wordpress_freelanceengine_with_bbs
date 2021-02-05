@@ -264,15 +264,45 @@
             event.preventDefault();
             var id = $(event.currentTarget) .attr('data-id');
             var last = $(event.currentTarget) .closest('ul').find('li').length;
-            $('#modal_delete_meta_history').find('form').attr('data-processing','no');
-            this.modalPortfolio = new Views.Modal_Add_Portfolio({
-                el: '#modal_delete_meta_history',
-                collection: {
-                    id : id,
-                    last : last
+            var obj = $(event.currentTarget);
+            var view = this;
+            //var id = $('input[name="ID"]',obj).val();
+            //var last = obj.attr('data-last');
+            obj.attr('data-processing','yes');
+            $.ajax({
+                type: "post",
+                url: ae_globals.ajaxURL,
+                dataType: 'json',
+                data: {
+                    action: 'ae-profile-delete-meta',
+                    ID : id
+                },
+                beforeSend: function () {
+                    obj.attr('disabled', true).css('opacity', '0.5');
+                    view.blockUi.block(obj);
+                },
+                success: function (data, statusText, xhr) {
+                    if (data.success) {
+                        AE.pubsub.trigger('ae:notification', {
+                            msg: data.msg,
+                            notice_type: 'success'
+                        });
+                        if(last == 3){
+                            $('.meta_history_item_'+id).closest('.fre-profile-box').find('.fre-empty-optional-profile').fadeIn();
+                        }
+                        $('.meta_history_item_'+id).remove();
+
+                    } else {
+                        AE.pubsub.trigger('ae:notification', {
+                            msg: data.msg,
+                            notice_type: 'error'
+                        });
+                    }
+                    //view.closeModal();
+                    obj.attr('disabled', false).css('opacity', '1');
+                    view.blockUi.unblock();
                 }
             });
-            this.modalPortfolio.openModal();
         },
 
         showEditTab: function (e) {
@@ -287,4 +317,5 @@
             obj.closest('.cnt-bulletin-hide').css('display','none');
         },
     });
+
 })(jQuery, window.AE.Models, window.AE.Collections, window.AE.Views);
