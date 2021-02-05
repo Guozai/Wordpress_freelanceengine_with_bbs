@@ -216,6 +216,10 @@ function setup_child_bulletin_class() {
 				if ( $bulletin_id !== false ) {
 					add_post_meta( $bulletin_id, 'post_category', $request['bulletin']['category'] );
 					add_post_meta( $bulletin_id, 'post_language', $request['bulletin']['language'] );
+					wp_send_json( array(
+						'success' => true,
+						'msg'     => __( "Your post has been created successfully.", ET_DOMAIN )
+					) );
 				} else {
 					wp_send_json( array(
 						'success' => false,
