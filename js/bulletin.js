@@ -317,14 +317,12 @@
         },
 
         showCommentTab: function (e) {
-            debugger;
+            //debugger;
             e.preventDefault();
             var obj = $(e.currentTarget);
             var tab_id_prefix = obj.attr('data-ctn_comment');
             var bulletin_id = obj.attr('data-id');
-            //var tab_hide = obj.attr('data-ctn_hide');
             $('#'+tab_id_prefix+bulletin_id).fadeIn();
-            //$('#'+tab_hide).fadeOut();
         },
     });
 
