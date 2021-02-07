@@ -15,6 +15,8 @@
             'click a.remove_history_fre': 'RemoveBulletin',
             // show and hide box edit profile
             'click .bulletin-show-edit-tab-btn' : 'showEditTab',
+            // show comment box
+            'click .bulletin-comment-btn' : 'showCommentTab',
         },
         initialize: function() {
             //set current profile
@@ -312,6 +314,17 @@
                 $('#'+tab_hide).fadeOut();
             }
             obj.closest('.cnt-bulletin-hide').css('display','none');
+        },
+
+        showCommentTab: function (e) {
+            debugger;
+            e.preventDefault();
+            var obj = $(e.currentTarget);
+            var tab_id_prefix = obj.attr('data-ctn_comment');
+            var bulletin_id = obj.attr('data-id');
+            //var tab_hide = obj.attr('data-ctn_hide');
+            $('#'+tab_id_prefix+bulletin_id).fadeIn();
+            //$('#'+tab_hide).fadeOut();
         },
     });
 

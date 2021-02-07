@@ -946,6 +946,7 @@ add_action( 'after_setup_theme', 'override_profile_class');
 /**
  * enqueue child styles
  */
+add_action( 'wp_enqueue_styles', 'freelanceengine_child_styles', 100 );
 function freelanceengine_child_styles() {
 	wp_dequeue_style( 'main-style' );
 	wp_deregister_style( 'main-style' );
@@ -954,8 +955,7 @@ function freelanceengine_child_styles() {
 	wp_enqueue_style('main-style' );	
 }
 
-add_action( 'wp_enqueue_styles', 'freelanceengine_child_styles', 100 );
-
+add_action( 'wp_enqueue_scripts', 'freelanceengine_child_scripts', 100 );
 function freelanceengine_child_scripts() {
 	// Dequeue (remove) parent theme script
 	wp_dequeue_script( 'front' );
@@ -972,7 +972,8 @@ function freelanceengine_child_scripts() {
 	// enqueue replacement child theme script
 	wp_enqueue_script( 'front' );
 	// script edit bulletin
-	if ( is_page_template( 'page-bulletin.php' ) || is_author() || et_load_mobile() ) {
+	if ( is_page_template( 'page-bulletin.php' ) || is_author() || et_load_mobile()
+			|| is_page_template('page-list-bulletins-new.php') ) {
 		// register child page-bulletin.php script
 		wp_register_script( 'bulletin', get_stylesheet_directory_uri() . '/js/bulletin.js', array( 
 			'jquery',
@@ -987,11 +988,8 @@ function freelanceengine_child_scripts() {
 	}
 }
 
-add_action( 'wp_enqueue_scripts', 'freelanceengine_child_scripts', 100 );
-
 // Remove p tags from category description
+add_filter('the_content', 'fre_remove_content_tag', 100 );
 function fre_remove_content_tag($content) {
 	return strip_tags($content, "");
 }
-
-add_filter('the_content', 'fre_remove_content_tag', 100 );
